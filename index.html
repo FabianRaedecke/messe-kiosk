@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="de" class="ex-kiosk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Explorer">
+<meta name="theme-color" content="#e6e7e9">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<title>Maschinen-Explorer · Messe</title>
+
+<link rel="preload" as="font" type="font/woff2" href="assets/fonts/SuisseIntl-Black-WebS.woff2" crossorigin>
+<link rel="stylesheet" href="css/explorer.css">
+<link rel="stylesheet" href="css/kiosk.css">
+<style>
+  /* Kiosk-Seite */
+  .offline-badge{position:fixed;right:16px;bottom:16px;z-index:1003;padding:6px 12px;border-radius:999px;font:600 12px/1.2 system-ui,sans-serif;
+    background:#b45309;color:#fff;opacity:0;transition:opacity .4s;pointer-events:none}
+  .offline-badge.ok{background:#1f5b3f}
+  .offline-badge.on{opacity:1}
+  body{margin:0;background:#e6e7e9;font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased;color:#15181b}
+</style>
+</head>
+<body>
+
+<!-- =================================================================
+     Komponente: alles innerhalb von [data-explorer]
+     data-assets        Pfad zum assets-Ordner (mit Slash am Ende)
+     data-scroll-length Länge der Scrollstrecke (Standard 400vh)
+     data-intro-share   Anteil der Strecke für die Fahrt (Standard 0.8)
+     data-portrait-zoom Bildbreite im Hochformat = Viewport × Faktor (Standard 1.6)
+     data-idle-timeout  Sekunden ohne Eingabe bis zum Reset (Standard 120, nur mit kiosk.js)
+     ================================================================= -->
+<section class="ex" data-explorer data-idle-timeout="120" data-scroll-length="300vh" data-frame-width="1920" data-video-width="1920" data-assets="assets/" aria-label="Interaktive Maschinenansicht">
+  <div class="ex-sticky">
+    <canvas class="ex-bg" width="160" height="90" aria-hidden="true"></canvas>
+
+    <div class="ex-stage">
+      <!-- Frame 0 als normales Bild: sofort sichtbar, bevor das Script läuft -->
+      <picture class="ex-poster">
+        <source type="image/avif" srcset="assets/intro/1920/f000.avif">
+        <img src="assets/intro/1920/f000.webp" alt="Maschine in der Außenansicht" width="1920" height="1080">
+      </picture>
+      <canvas class="ex-canvas" aria-hidden="true"></canvas>
+      <video class="ex-zoom-in"  muted playsinline preload="none" aria-hidden="true"></video>
+      <video class="ex-zoom-out" muted playsinline preload="none" aria-hidden="true"></video>
+      <video class="ex-loop" muted loop playsinline preload="none" aria-hidden="true"></video>
+      <div class="ex-hotspots"></div>
+    </div>
+
+    <div class="ex-progress"></div>
+    <div class="ex-choose">Bereich auswählen</div>
+    <div class="ex-hint"><i></i>Nach oben wischen</div>
+  </div>
+
+  <!-- Inhalte der Bereiche: kommen später aus dem CMS.
+       data-zoom    Nummer des Zoom-Videos (zoom-01-in / zoom-01-out)
+       data-detail  Nummer des Detail-Loops und Standbilds
+       data-video   "false" = nur Standbild
+       data-x/-y    Hotspot-Position in % des Bildes (mit ?edit per Drag ermitteln) -->
+  <div class="ex-areas">
+    <article class="ex-area" data-area="c-stage" data-name="C-Stage" data-zoom="01" data-detail="01" data-x="34" data-y="38">
+      <h2>Überschrift C-Stage</h2>
+      <p>Platzhalter Fließtext. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante venenatis dapibus.</p>
+      <p>Donec ullamcorper nulla non metus auctor fringilla. Maecenas sed diam eget risus varius blandit sit amet non magna.</p>
+    </article>
+    <article class="ex-area" data-area="condenser" data-name="Condenser" data-zoom="02" data-detail="02" data-x="52" data-y="30">
+      <h2>Überschrift Condenser</h2>
+      <p>Platzhalter Fließtext. Cras mattis consectetur purus sit amet fermentum. Vestibulum id ligula porta felis euismod semper.</p>
+      <p>Nullam quis risus eget urna mollis ornare vel eu leo. Aenean lacinia bibendum nulla sed consectetur.</p>
+    </article>
+    <article class="ex-area" data-area="dyson" data-name="Dyson" data-zoom="03" data-detail="03" data-x="62" data-y="55">
+      <h2>Überschrift Dyson</h2>
+      <p>Platzhalter Fließtext. Maecenas faucibus mollis interdum. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
+      <p>Etiam porta sem malesuada magna mollis euismod. Curabitur blandit tempus porttitor.</p>
+    </article>
+    <article class="ex-area" data-area="robot" data-name="Robot" data-zoom="04" data-detail="04" data-video="false" data-x="28" data-y="72">
+      <h2>Überschrift Robot</h2>
+      <p>Platzhalter Fließtext. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Sed posuere consectetur est at lobortis.</p>
+      <p>Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit.</p>
+    </article>
+  </div>
+
+  <div class="ex-overlay" aria-hidden="true">
+    <div class="ex-dialog" role="dialog" aria-modal="true" aria-labelledby="ex-ov-title">
+      <button class="ex-close" type="button" aria-label="Detailansicht schließen">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+      <div class="ex-media"></div>
+      <div class="ex-copy">
+        <p class="ex-kicker"></p>
+        <div class="ex-body"></div>
+        <div class="ex-nav">
+          <button class="ex-prev" type="button">← Vorheriger</button>
+          <button class="ex-next" type="button">Nächster →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="ex-loader"><span class="ex-loader-text">Lädt …</span></div>
+<div class="ex-veil" aria-hidden="true"></div>
+<div class="offline-badge" aria-hidden="true"></div>
+
+<script src="js/explorer.js" defer></script>
+<script src="js/kiosk.js" defer></script>
+<script>
+  // Offline-Cache für den Messebetrieb
+  if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+    navigator.serviceWorker.register('sw.js');
+    // Kurze Anzeige nach dem Start, ob alles offline verfügbar ist
+    const badge = document.querySelector('.offline-badge');
+    const ask = () => navigator.serviceWorker.controller && navigator.serviceWorker.controller.postMessage('status');
+    navigator.serviceWorker.addEventListener('message', e => {
+      if (e.data.type !== 'status') return;
+      const ok = e.data.cached >= e.data.total;
+      badge.textContent = ok ? 'Offline bereit' : `Offline-Cache ${e.data.cached} / ${e.data.total}`;
+      badge.classList.toggle('ok', ok); badge.classList.add('on');
+      if (ok) setTimeout(() => badge.classList.remove('on'), 4000); else setTimeout(ask, 2000);
+    });
+    navigator.serviceWorker.ready.then(() => setTimeout(ask, 1500));
+    navigator.serviceWorker.addEventListener('controllerchange', () => setTimeout(ask, 500));
+  }
+</script>
+</body>
+</html>
