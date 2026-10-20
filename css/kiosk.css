@@ -13,7 +13,7 @@ html.ex-kiosk .ex-choose{top:calc(24px + env(safe-area-inset-top,0px))}
 html.ex-kiosk .ex-hint{bottom:calc(28px + env(safe-area-inset-bottom,0px))}
 /* Overlay im Kiosk immer im Mobile-Layout: Bild oben, Text darunter, als Sheet von unten */
 html.ex-kiosk .ex-overlay{align-items:end;padding:calc(env(safe-area-inset-top,0px) + 12px) 0 0}
-html.ex-kiosk .ex-dialog{grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr);max-height:92svh;
+html.ex-kiosk .ex-dialog{width:70%;grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr);max-height:92svh;
   border-radius:var(--ex-radius) var(--ex-radius) 0 0;transform:translateY(40px)}
 html.ex-kiosk .ex-overlay.open .ex-dialog{transform:none}
 html.ex-kiosk .ex-media{min-height:0;max-height:55svh;clip-path:polygon(0 0,100% 0,100% calc(100% - 24px),0 100%)}
