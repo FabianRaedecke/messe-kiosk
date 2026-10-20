@@ -1,7 +1,7 @@
 /* Service Worker: hält die Messe-Version offline verfügbar.
    Wird beim ersten Aufruf mit Internet komplett in den Cache geladen.
    Nach Änderungen an Dateien: tools/build-sw.py erneut ausführen (neue Version). */
-const VERSION = 'explorer-f6d316c9';
+const VERSION = 'explorer-57d61324';
 const PRECACHE = [
  "./",
  "index.html",
@@ -13,7 +13,9 @@ const PRECACHE = [
  "icon-180.png",
  "icon-192.png",
  "icon-512.png",
- "assets/fonts/SuisseIntl-Black-WebS.woff2",
+ "assets/fonts/SuisseIntl-Regular-WebS.woff2",
+ "assets/fonts/SuisseIntl-Bold-WebS.woff2",
+ "assets/fonts/SuisseIntl-Medium-WebS.woff2",
  "assets/intro/1920/f000.webp",
  "assets/intro/1920/f000.avif",
  "assets/intro/1920/f001.avif",

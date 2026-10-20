@@ -39,7 +39,7 @@
   const hotWrap = $('.ex-hotspots'), hint = $('.ex-hint'), choose = $('.ex-choose'), progressBar = $('.ex-progress');
   const overlay = $('.ex-overlay'), dialog = $('.ex-dialog');
   const ovMedia = $('.ex-media'), ovKicker = $('.ex-kicker'), ovBody = $('.ex-body');
-  const btnClose = $('.ex-close'), btnPrev = $('.ex-prev'), btnNext = $('.ex-next');
+  const btnClose = $('.ex-close');
 
   /* ---------- Bereiche aus dem Markup lesen (CMS-freundlich) ---------- */
   const areas = [...root.querySelectorAll('.ex-area')].map((el, i) => ({
@@ -343,25 +343,7 @@
     if (lastFocus && lastFocus.focus) lastFocus.focus({ preventScroll: true });
   }
 
-  // Direkt zum nächsten Bereich wechseln, ohne Rückfahrt
-  async function switchArea(dir) {
-    if (state !== 'detail') return;
-    active = (active + dir + areas.length) % areas.length;
-    const a = areas[active];
-    const fade = (from, to, ms) => dialog.animate([{ opacity: from }, { opacity: to }], { duration: reduceMotion ? 0 : ms, fill: 'forwards' }).finished;
-    await fade(1, 0, 160);
-    fillOverlay(a);
-    if (!reduceMotion) { // Hintergrund auf das neue Zoom-Ziel setzen
-      const outSrc = await fetchVideo(zoomUrl(a, 'out'));
-      await prepare(zOut, outSrc); zOut.currentTime = 0;
-      show(zOut, true); show(zIn, false);
-    }
-    await fade(0, 1, 220);
-  }
-
   btnClose.addEventListener('click', closeArea);
-  btnPrev && btnPrev.addEventListener('click', () => switchArea(-1));
-  btnNext && btnNext.addEventListener('click', () => switchArea(1));
   overlay.addEventListener('click', e => { if (e.target === overlay) closeArea(); });
   window.addEventListener('keydown', e => {
     if (state !== 'detail') return;

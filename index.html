@@ -12,7 +12,9 @@
 <link rel="apple-touch-icon" href="icon-180.png">
 <title>Maschinen-Explorer · Messe</title>
 
-<link rel="preload" as="font" type="font/woff2" href="assets/fonts/SuisseIntl-Black-WebS.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="assets/fonts/SuisseIntl-Regular-WebS.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="assets/fonts/SuisseIntl-Bold-WebS.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="assets/fonts/SuisseIntl-Medium-WebS.woff2" crossorigin>
 <link rel="stylesheet" href="css/explorer.css">
 <link rel="stylesheet" href="css/kiosk.css">
 <style>
@@ -34,7 +36,7 @@
      data-portrait-zoom Bildbreite im Hochformat = Viewport × Faktor (Standard 1.6)
      data-idle-timeout  Sekunden ohne Eingabe bis zum Reset (Standard 120, nur mit kiosk.js)
      ================================================================= -->
-<section class="ex" data-explorer data-idle-timeout="120" data-scroll-length="300vh" data-frame-width="1920" data-video-width="1920" data-assets="assets/" aria-label="Interaktive Maschinenansicht">
+<section class="ex" data-explorer data-idle-timeout="120" data-scroll-length="260vh" data-intro-share="1" data-frame-width="1920" data-video-width="1920" data-assets="assets/" aria-label="Interaktive Maschinenansicht">
   <div class="ex-sticky">
     <canvas class="ex-bg" width="160" height="90" aria-hidden="true"></canvas>
 
@@ -93,10 +95,6 @@
       <div class="ex-copy">
         <p class="ex-kicker"></p>
         <div class="ex-body"></div>
-        <div class="ex-nav">
-          <button class="ex-prev" type="button">← Vorheriger</button>
-          <button class="ex-next" type="button">Nächster →</button>
-        </div>
       </div>
     </div>
   </div>

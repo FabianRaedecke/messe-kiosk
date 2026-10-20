@@ -40,7 +40,8 @@ Am Element `<section class="ex" data-explorer …>` in `index.html`:
 | Attribut | Wert | Bedeutung |
 |---|---|---|
 | `data-idle-timeout` | `120` | Sekunden ohne Eingabe bis zum Reset |
-| `data-scroll-length` | `300vh` | Wie weit man wischen muss, bis die Fahrt durch ist |
+| `data-scroll-length` | `260vh` | Wie weit man wischen muss, bis die Fahrt durch ist |
+| `data-intro-share` | `1` | Fahrt nutzt die ganze Strecke, kein leerer Bereich am Ende |
 
 Zum Testen kann die Zeit über die Adresse überschrieben werden: `index.html?idle=10` setzt sie auf 10 Sekunden.
 
