@@ -4,6 +4,8 @@
 .ex-loader-text{font:600 15px/1 system-ui,-apple-system,sans-serif;letter-spacing:.06em;color:#5b6168}
 .ex-veil{position:fixed;inset:0;z-index:1001;background:var(--ex-bg,#e6e7e9);opacity:0;pointer-events:none;transition:opacity .6s ease}
 .ex-veil.on{opacity:1;pointer-events:auto}
+/* Bühne folgt der sichtbaren Höhe, auch wenn Safari seine Leisten ein- oder ausblendet (svh ließe unten einen Streifen frei) */
+html.ex-kiosk .ex-sticky{height:100vh;height:100dvh}
 html.ex-kiosk,html.ex-kiosk body{
   -webkit-user-select:none;user-select:none;-webkit-touch-callout:none;
   -webkit-tap-highlight-color:transparent;touch-action:manipulation;overscroll-behavior:none;
