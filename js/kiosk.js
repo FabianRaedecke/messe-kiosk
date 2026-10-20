@@ -16,14 +16,20 @@
   const wait = ms => new Promise(r => setTimeout(r, ms));
 
   /* ---------- Alles vorladen ---------- */
+  // Overlay-Bild laden, fertig entschlüsseln und behalten, damit es beim Öffnen ohne Aufblitzen erscheint
+  function loadPoster(a) {
+    const img = new Image();
+    img.alt = ''; img.decoding = 'sync';
+    img.src = ex.url.poster(a);
+    return img.decode().then(() => { ex.posters.set(a.i, img); }, () => {});
+  }
   async function preloadAll(onProgress) {
     const urls = [ex.url.loop()];
     ex.areas.forEach(a => {
       urls.push(ex.url.zoom(a, 'in'), ex.url.zoom(a, 'out'));
       if (a.hasVideo) urls.push(ex.url.detail(a));
     });
-    const posters = ex.areas.map(ex.url.poster);
-    const total = ex.frameCount + urls.length + posters.length;
+    const total = ex.frameCount + urls.length + ex.areas.length;
     let done = 0;
     const report = () => onProgress((ex.framesLoaded + done) / total);
     const tickP = () => { done++; report(); };
@@ -31,7 +37,7 @@
     await Promise.all([
       ex.loadIntroFrames(),
       ...urls.map(u => ex.fetchVideo(u).then(tickP)),
-      ...posters.map(u => new Promise(r => { const i = new Image(); i.onload = i.onerror = () => { tickP(); r(); }; i.src = u; })),
+      ...ex.areas.map(a => loadPoster(a).then(tickP)),
     ]);
     clearInterval(timer);
   }

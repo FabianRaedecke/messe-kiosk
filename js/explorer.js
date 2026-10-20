@@ -255,14 +255,20 @@
   }, { passive: false });
 
   /* ---------- Overlay ---------- */
+  const posters = new Map(); // Bereich-Index → fertig geladenes <img>, von kiosk.js befüllt
   async function fillOverlay(a) {
     ovKicker.textContent = `Bereich ${String(a.i + 1).padStart(2, '0')} · ${a.name}`;
     ovBody.innerHTML = a.el.innerHTML;
     const heading = ovBody.querySelector('h2,h3'); if (heading) heading.id = 'ex-ov-title';
     ovMedia.innerHTML = '';
-    const pic = document.createElement('picture');
-    pic.innerHTML = `<source type="image/avif" srcset="${detailPoster(a)}.avif"><img src="${detailPoster(a)}.jpg" alt="">`;
-    ovMedia.appendChild(pic);
+    // Vorab entschlüsseltes Bild (kiosk.js) direkt einsetzen, sonst blitzt beim Öffnen kurz der Hintergrund auf
+    const cached = posters.get(a.i);
+    if (cached) ovMedia.appendChild(cached);
+    else {
+      const pic = document.createElement('picture');
+      pic.innerHTML = `<source type="image/avif" srcset="${detailPoster(a)}.avif"><img src="${detailPoster(a)}.jpg" alt="">`;
+      ovMedia.appendChild(pic);
+    }
     if (a.hasVideo) {
       const v = document.createElement('video');
       v.muted = true; v.loop = true; v.playsInline = true; v.autoplay = true;
@@ -420,7 +426,7 @@
   // Schnittstelle für Erweiterungen (kiosk.js) und die Konsole
   window.explorer = {
     root, areas, ready, reset, fetchVideo, loadIntroFrames,
-    frameCount: INTRO_END + 1,
+    posters, frameCount: INTRO_END + 1,
     get framesLoaded() { return frames.filter(Boolean).length; },
     get state() { return state; },
     url: { zoom: zoomUrl, loop: loopUrl, detail: detailUrl, poster: a => `${detailPoster(a)}.${ext === 'avif' ? 'avif' : 'jpg'}` },
