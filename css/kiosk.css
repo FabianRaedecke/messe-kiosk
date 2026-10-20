@@ -6,6 +6,13 @@
 .ex-veil.on{opacity:1;pointer-events:auto}
 /* Bühne folgt der sichtbaren Höhe, auch wenn Safari seine Leisten ein- oder ausblendet (svh ließe unten einen Streifen frei) */
 html.ex-kiosk .ex-sticky{height:100vh;height:100dvh}
+html.ex-kiosk{background:var(--ex-bg,#e6e7e9)}
+/* Abstand zu Statusleiste und Home-Balken (Home-Bildschirm-App, viewport-fit=cover) */
+html.ex-kiosk .ex-progress{top:env(safe-area-inset-top,0px)}
+html.ex-kiosk .ex-choose{top:calc(24px + env(safe-area-inset-top,0px))}
+html.ex-kiosk .ex-hint{bottom:calc(28px + env(safe-area-inset-bottom,0px))}
+html.ex-kiosk .ex-overlay{padding-top:max(clamp(12px,3vw,40px),calc(env(safe-area-inset-top,0px) + 12px));
+  padding-bottom:max(clamp(12px,3vw,40px),calc(env(safe-area-inset-bottom,0px) + 12px))}
 html.ex-kiosk,html.ex-kiosk body{
   -webkit-user-select:none;user-select:none;-webkit-touch-callout:none;
   -webkit-tap-highlight-color:transparent;touch-action:manipulation;overscroll-behavior:none;
