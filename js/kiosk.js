@@ -78,8 +78,8 @@
   const sticky = ex.root.querySelector('.ex-sticky');
   const playBtn = document.createElement('button');
   playBtn.type = 'button'; playBtn.className = 'ex-play';
-  playBtn.setAttribute('aria-label', 'Details ansehen');
-  playBtn.innerHTML = '<span class="ring"></span><span class="dot"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="label">Details ansehen</span>';
+  playBtn.setAttribute('aria-label', 'See details');
+  playBtn.innerHTML = '<span class="ring"></span><span class="dot"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="label">See details</span>';
   sticky.appendChild(playBtn);
 
   let playing = false;

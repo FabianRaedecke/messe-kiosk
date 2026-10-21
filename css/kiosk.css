@@ -24,11 +24,11 @@ html.ex-kiosk,html.ex-kiosk body{
   -webkit-tap-highlight-color:transparent;touch-action:manipulation;overscroll-behavior:none;
 }
 /* Play-Button statt „Nach oben wischen“: fährt automatisch zu den Hotspots */
-html.ex-kiosk .ex-hint{display:none}
-.ex-play{position:absolute;left:50%;bottom:calc(64px + env(safe-area-inset-bottom,0px));z-index:3;width:96px;height:96px;padding:0;border:0;border-radius:50%;
-  background:transparent;cursor:pointer;transform:translate(-50%,12px) scale(.9);opacity:0;pointer-events:none;
+html.ex-kiosk .ex-hint,html.ex-kiosk .ex-choose{display:none}
+.ex-play{position:absolute;left:50%;top:50%;margin:-48px 0 0 -48px;z-index:3;width:96px;height:96px;padding:0;border:0;border-radius:50%;
+  background:transparent;cursor:pointer;transform:translateY(12px) scale(.9);opacity:0;pointer-events:none;
   transition:opacity .4s var(--ex-ease),transform .5s var(--ex-ease)}
-.ex-play.on{opacity:1;transform:translate(-50%,0) scale(1);pointer-events:auto}
+.ex-play.on{opacity:1;transform:none;pointer-events:auto}
 .ex-play .dot{position:absolute;inset:12px;display:grid;place-items:center;border-radius:50%;background:var(--ex-glow);color:var(--ex-accent);
   box-shadow:0 0 0 2px var(--ex-accent),0 10px 28px rgba(1,63,48,.4);transition:background .25s,color .25s,transform .35s var(--ex-ease)}
 .ex-play svg{width:40px;height:40px;margin-left:-2px;fill:currentColor}
