@@ -23,3 +23,27 @@ html.ex-kiosk,html.ex-kiosk body{
   -webkit-user-select:none;user-select:none;-webkit-touch-callout:none;
   -webkit-tap-highlight-color:transparent;touch-action:manipulation;overscroll-behavior:none;
 }
+/* Play-Button statt „Nach oben wischen“: fährt automatisch zu den Hotspots */
+html.ex-kiosk .ex-hint{display:none}
+.ex-play{position:absolute;left:50%;bottom:calc(64px + env(safe-area-inset-bottom,0px));z-index:3;width:96px;height:96px;padding:0;border:0;border-radius:50%;
+  background:transparent;cursor:pointer;transform:translate(-50%,12px) scale(.9);opacity:0;pointer-events:none;
+  transition:opacity .4s var(--ex-ease),transform .5s var(--ex-ease)}
+.ex-play.on{opacity:1;transform:translate(-50%,0) scale(1);pointer-events:auto}
+.ex-play .dot{position:absolute;inset:12px;display:grid;place-items:center;border-radius:50%;background:var(--ex-glow);color:var(--ex-accent);
+  box-shadow:0 0 0 2px var(--ex-accent),0 10px 28px rgba(1,63,48,.4);transition:background .25s,color .25s,transform .35s var(--ex-ease)}
+.ex-play svg{width:40px;height:40px;margin-left:-2px;fill:currentColor}
+.ex-play .ring{position:absolute;inset:0;border-radius:50%;border:2px solid var(--ex-glow);animation:ex-pulse 2.2s var(--ex-ease) infinite}
+.ex-play .label{position:absolute;left:50%;top:calc(100% + 8px);transform:translateX(-50%);white-space:nowrap;
+  background:var(--ex-accent);color:#fff;font:500 15px/1 var(--ex-font);padding:10px 16px;border-radius:999px;box-shadow:0 4px 14px rgba(1,63,48,.3)}
+.ex-play:active .dot{transform:scale(.94);background:var(--ex-accent);color:var(--ex-glow)}
+.ex-play:focus-visible{outline:2px solid var(--ex-glow);outline-offset:4px}
+@media (prefers-reduced-motion:reduce){.ex-play .ring{animation:none}}
+/* Reset-Button in der Übersicht: zurück zum Anfang */
+.ex-reset{position:absolute;left:calc(24px + env(safe-area-inset-left,0px));top:calc(24px + env(safe-area-inset-top,0px));z-index:3;
+  display:flex;align-items:center;gap:10px;min-height:48px;padding:0 20px 0 16px;border:0;border-radius:999px;cursor:pointer;
+  background:var(--ex-accent);color:#fff;font:500 15px/1 var(--ex-font);box-shadow:0 4px 14px rgba(1,63,48,.3);
+  opacity:0;pointer-events:none;transform:translateY(-8px);transition:opacity .4s,transform .4s var(--ex-ease),background .25s,color .25s}
+.ex-reset.on{opacity:1;pointer-events:auto;transform:none}
+.ex-reset svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.ex-reset:active{background:var(--ex-glow);color:#000}
+.ex-reset:focus-visible{outline:2px solid var(--ex-glow);outline-offset:4px}

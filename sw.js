@@ -1,7 +1,7 @@
 /* Service Worker: hält die Messe-Version offline verfügbar.
    Wird beim ersten Aufruf mit Internet komplett in den Cache geladen.
    Nach Änderungen an Dateien: tools/build-sw.py erneut ausführen (neue Version). */
-const VERSION = 'explorer-12920605';
+const VERSION = 'explorer-cac2726c';
 const PRECACHE = [
  "./",
  "index.html",
@@ -71,6 +71,7 @@ const PRECACHE = [
  "assets/video/detail-01-1920.mp4",
  "assets/video/detail-02-1920.mp4",
  "assets/video/detail-03-1920.mp4",
+ "assets/video/intro-1920.mp4",
  "assets/video/overview-loop-1920.mp4",
  "assets/video/zoom-01-in-1920.mp4",
  "assets/video/zoom-01-out-1920.mp4",

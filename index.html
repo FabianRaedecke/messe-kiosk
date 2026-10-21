@@ -35,8 +35,10 @@
      data-intro-share   Anteil der Strecke für die Fahrt (Standard 0.8)
      data-portrait-zoom Bildbreite im Hochformat = Viewport × Faktor (Standard 1.6)
      data-idle-timeout  Sekunden ohne Eingabe bis zum Reset (Standard 120, nur mit kiosk.js)
+     data-intro-end     Sekunde im Intro-Video (assets/video/intro-1920.mp4), an der die Übersicht erreicht ist (Standard 2, nur mit kiosk.js)
+     data-play-duration Dauer der Fahrt mit Einzelbildern, falls das Intro-Video nicht startet (Standard 4, nur mit kiosk.js)
      ================================================================= -->
-<section class="ex" data-explorer data-idle-timeout="120" data-scroll-length="260vh" data-intro-share="1" data-frame-width="1920" data-video-width="1920" data-assets="assets/" aria-label="Interaktive Maschinenansicht">
+<section class="ex" data-explorer data-idle-timeout="120" data-intro-end="2" data-scroll-length="260vh" data-intro-share="1" data-frame-width="1920" data-video-width="1920" data-assets="assets/" aria-label="Interaktive Maschinenansicht">
   <div class="ex-sticky">
     <canvas class="ex-bg" width="160" height="90" aria-hidden="true"></canvas>
 
