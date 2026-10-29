@@ -58,15 +58,9 @@ html.ex-locked{overflow:hidden;overscroll-behavior:none}
   border-radius:1px;background:var(--ex-accent);transition:background .25s}
 .ex-hotspot .dot::after{transform:rotate(90deg)}
 .ex-hotspot .ring{position:absolute;inset:0;border-radius:50%;border:2px solid var(--ex-glow);animation:ex-pulse 2.2s var(--ex-ease) infinite}
-.ex-hotspot .label{
-  position:absolute;left:50%;top:calc(100% + 6px);transform:translateX(-50%);white-space:nowrap;
-  background:var(--ex-accent);color:#fff;font:500 14px/1 var(--ex-font);
-  padding:9px 14px;border-radius:999px;box-shadow:0 4px 14px rgba(1,63,48,.3);transition:background .25s,color .25s;
-}
 .ex-hotspot:hover .dot,.ex-hotspot:focus-visible .dot{background:var(--ex-accent);transform:rotate(90deg) scale(1.08)}
 .ex-hotspot:hover .dot::before,.ex-hotspot:hover .dot::after,
 .ex-hotspot:focus-visible .dot::before,.ex-hotspot:focus-visible .dot::after{background:var(--ex-glow)}
-.ex-hotspot:hover .label,.ex-hotspot:focus-visible .label{background:var(--ex-glow);color:#000}
 .ex-hotspot:focus-visible{outline:2px solid var(--ex-glow);outline-offset:4px}
 .ex-hotspot.busy .ring{animation-duration:.8s}
 @keyframes ex-pulse{0%{transform:scale(.55);opacity:.9}80%,100%{transform:scale(1.35);opacity:0}}

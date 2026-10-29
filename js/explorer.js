@@ -185,8 +185,7 @@
     b.style.left = a.x + '%'; b.style.top = a.y + '%';
     b.style.transitionDelay = (a.i * 70) + 'ms';
     b.setAttribute('aria-label', `${a.name}: view details`);
-    b.innerHTML = `<span class="ring"></span><span class="dot"></span><span class="label"></span>`;
-    b.querySelector('.label').textContent = a.name;
+    b.innerHTML = `<span class="ring"></span><span class="dot"></span>`;
     b.addEventListener('click', () => { if (!(EDIT && dragMoved)) openArea(a.i); });
     ['pointerenter', 'focus', 'touchstart'].forEach(ev => b.addEventListener(ev, () => preloadArea(a), { passive: true }));
     a.btn = b; hotWrap.appendChild(b);
