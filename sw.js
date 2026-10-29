@@ -1,7 +1,7 @@
 /* Service Worker: hält die Messe-Version offline verfügbar.
    Wird beim ersten Aufruf mit Internet komplett in den Cache geladen.
    Nach Änderungen an Dateien: tools/build-sw.py erneut ausführen (neue Version). */
-const VERSION = 'explorer-43a3ac7a';
+const VERSION = 'explorer-ebee110c';
 const PRECACHE = [
  "./",
  "index.html",

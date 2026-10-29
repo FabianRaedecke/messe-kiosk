@@ -11,14 +11,27 @@ html.ex-kiosk{background:var(--ex-bg,#e6e7e9)}
 html.ex-kiosk .ex-progress{top:env(safe-area-inset-top,0px)}
 html.ex-kiosk .ex-choose{top:calc(24px + env(safe-area-inset-top,0px))}
 html.ex-kiosk .ex-hint{bottom:calc(28px + env(safe-area-inset-bottom,0px))}
-/* Overlay im Kiosk immer im Mobile-Layout: Bild oben, Text darunter, als Sheet von unten */
-html.ex-kiosk .ex-overlay{align-items:end;padding:calc(env(safe-area-inset-top,0px) + 12px) 0 0}
-html.ex-kiosk .ex-dialog{width:70%;grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr);max-height:92svh;
-  border-radius:var(--ex-radius) var(--ex-radius) 0 0;transform:translateY(40px)}
-html.ex-kiosk .ex-overlay.open .ex-dialog{transform:none}
-html.ex-kiosk .ex-media{min-height:0;max-height:55svh;clip-path:polygon(0 0,100% 0,100% calc(100% - 24px),0 100%)}
-html.ex-kiosk .ex-close{top:12px;right:12px;width:44px;height:44px;background:rgba(255,255,255,.92)}
-html.ex-kiosk .ex-copy{justify-content:flex-start;padding-bottom:calc(clamp(24px,3vw,48px) + env(safe-area-inset-bottom,0px))}
+/* Overlay im Kiosk (Querformat): zweispaltig, Bild links über die volle Höhe, Text rechts komplett ohne Scrollen.
+   Mindesthöhe 520 px, wächst mit längerem Text bis zur Bildschirmhöhe; darüber wird der Text scrollbar. */
+html.ex-kiosk .ex-overlay{padding:calc(24px + env(safe-area-inset-top,0px)) calc(24px + env(safe-area-inset-right,0px))
+  calc(24px + env(safe-area-inset-bottom,0px)) calc(24px + env(safe-area-inset-left,0px))}
+html.ex-kiosk .ex-dialog{width:100%;max-width:1320px;height:auto;min-height:min(520px,100%);max-height:100%;
+  grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);grid-template-rows:minmax(0,1fr)}
+html.ex-kiosk .ex-media{aspect-ratio:auto;min-height:0;height:100%}
+html.ex-kiosk .ex-copy{padding:clamp(28px,3.6vh,48px) clamp(28px,3.4vw,52px) clamp(28px,3.6vh,48px) clamp(20px,2.4vw,36px);justify-content:center}
+html.ex-kiosk .ex-kicker{font-size:13px;font-weight:700;margin-bottom:8px}
+html.ex-kiosk .ex-copy h2{font-size:clamp(21px,2.1vw,27px);margin-bottom:14px;padding-right:44px}
+html.ex-kiosk .ex-copy p,html.ex-kiosk .ex-copy ul{font-size:clamp(14px,1.2vw,15px);line-height:1.45}
+/* Hochformat (Fallback, falls die Ausrichtung nicht gesperrt ist): Bild oben, Text darunter, als Sheet von unten */
+@media (orientation:portrait){
+  html.ex-kiosk .ex-overlay{align-items:end;padding:calc(env(safe-area-inset-top,0px) + 12px) 0 0}
+  html.ex-kiosk .ex-dialog{width:100%;height:auto;max-height:92svh;grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr);
+    border-radius:var(--ex-radius) var(--ex-radius) 0 0;transform:translateY(40px)}
+  html.ex-kiosk .ex-overlay.open .ex-dialog{transform:none}
+  html.ex-kiosk .ex-media{aspect-ratio:16/9;height:auto;max-height:45svh;clip-path:polygon(0 0,100% 0,100% calc(100% - 24px),0 100%)}
+  html.ex-kiosk .ex-close{background:rgba(255,255,255,.92)}
+  html.ex-kiosk .ex-copy{justify-content:flex-start;padding:clamp(24px,3vw,48px) clamp(24px,3vw,48px) calc(clamp(24px,3vw,48px) + env(safe-area-inset-bottom,0px))}
+}
 html.ex-kiosk,html.ex-kiosk body{
   -webkit-user-select:none;user-select:none;-webkit-touch-callout:none;
   -webkit-tap-highlight-color:transparent;touch-action:manipulation;overscroll-behavior:none;

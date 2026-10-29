@@ -170,6 +170,8 @@
     return withTimeout(once(v, 'timeupdate'), 300);
   }
   const playEnd = v => withTimeout(once(v, 'ended'), ((v.duration || 1) * 1000) + 1500);
+  // play() kann in Safari (iPad) hängen bleiben, ohne je aufzulösen: nie unbegrenzt darauf warten
+  const playSafe = v => withTimeout(v.play().catch(() => {}), 1500);
   const show = (v, on) => v.classList.toggle('on', on);
 
   function preloadArea(a) {
@@ -199,6 +201,9 @@
   // intro | overview | zoomIn | detail | zoomOut
   let state = 'intro', target = 0, current = 0, active = -1, lastFocus = null;
   let visible = false, running = false, idlePreloadDone = false;
+  // seq: jede Fahrt (Öffnen, Schließen, Reset) bekommt eine Nummer; eine überholte Fahrt bricht nach dem nächsten await ab
+  let seq = 0, stateSince = Date.now();
+  function setState(s) { state = s; stateSince = Date.now(); }
 
   function scrollProgress() {
     const r = root.getBoundingClientRect();
@@ -207,7 +212,7 @@
   }
 
   function enterOverview() {
-    state = 'overview';
+    setState('overview');
     fetchVideo(loopUrl()).then(src => prepare(loopV, src)).then(() => {
       if (state !== 'overview') return;
       loopV.currentTime = 0; loopV.play().catch(() => {}); show(loopV, true);
@@ -220,7 +225,7 @@
     }
   }
   function leaveOverview() {
-    state = 'intro';
+    setState('intro');
     show(loopV, false);
     setTimeout(() => { if (state === 'intro') loopV.pause(); }, 350);
     showHotspots(false);
@@ -258,7 +263,8 @@
 
   /* ---------- Overlay ---------- */
   async function fillOverlay(a) {
-    ovKicker.textContent = `${root.dataset.kicker || 'Bereich'} ${String(a.i + 1).padStart(2, '0')} · ${a.name}`;
+    const kicker = root.dataset.kicker ?? 'Bereich';   // leer = nur der Name, ohne Nummer
+    ovKicker.textContent = kicker ? `${kicker} ${String(a.i + 1).padStart(2, '0')} · ${a.name}` : a.name;
     ovBody.innerHTML = a.el.innerHTML;
     const heading = ovBody.querySelector('h2,h3'); if (heading) heading.id = 'ex-ov-title';
     ovMedia.innerHTML = '';
@@ -288,62 +294,93 @@
 
   async function openArea(i) {
     if (state !== 'overview' || EDIT) return;
-    const a = areas[i];
-    state = 'zoomIn'; active = i; lastFocus = document.activeElement;
+    const a = areas[i], me = ++seq;
+    setState('zoomIn'); active = i; lastFocus = document.activeElement;
     lockScroll(true);
     a.btn.classList.add('busy');
     fetchVideo(zoomUrl(a, 'out'));             // Rückfahrt schon mal laden
     if (a.hasVideo) fetchVideo(detailUrl(a));  // Detail-Loop ebenso
-
-    if (!reduceMotion) {
-      const inSrc = await fetchVideo(zoomUrl(a, 'in'));
-      showHotspots(false);
-      show(loopV, false);                       // Loop ausblenden, darunter liegt Frame 50
-      await Promise.all([wait(300), prepare(zIn, inSrc)]);
-      loopV.pause();
-      zIn.currentTime = 0;
-      await zIn.play().catch(() => {});
-      await framePainted(zIn);
-      show(zIn, true);
-      await playEnd(zIn);
-    } else {
-      showHotspots(false);
+    try {
+      if (!reduceMotion) {
+        const inSrc = await fetchVideo(zoomUrl(a, 'in'));
+        if (me !== seq) return;
+        showHotspots(false);
+        show(loopV, false);                       // Loop ausblenden, darunter liegt das letzte Intro-Bild
+        await Promise.all([wait(300), prepare(zIn, inSrc)]);
+        if (me !== seq) return;
+        loopV.pause();
+        zIn.currentTime = 0;
+        await playSafe(zIn);
+        await framePainted(zIn);
+        if (me !== seq) return;
+        show(zIn, true);
+        await playEnd(zIn);
+        if (me !== seq) return;
+      } else {
+        showHotspots(false);
+      }
+    } catch (e) {
+      if (me === seq) backToOverview();
+      return;
+    } finally {
+      a.btn.classList.remove('busy');
     }
-    a.btn.classList.remove('busy');
     fillOverlay(a);
     openOverlay();
-    state = 'detail';
+    setState('detail');
     // Rückfahrt bereitlegen: erster Frame = Zoom-Ziel
-    if (!reduceMotion) fetchVideo(zoomUrl(a, 'out')).then(src => prepare(zOut, src)).then(() => { zOut.currentTime = 0; });
+    if (!reduceMotion) fetchVideo(zoomUrl(a, 'out')).then(src => me === seq && prepare(zOut, src)).then(() => { if (me === seq && state === 'detail') zOut.currentTime = 0; });
   }
 
   async function closeArea() {
     if (state !== 'detail') return;
-    const a = areas[active];
-    state = 'zoomOut';
+    const a = areas[active], me = ++seq;
+    setState('zoomOut');
     closeOverlay();
-    await wait(reduceMotion ? 0 : 350);
-    ovMedia.innerHTML = '';
-    if (!reduceMotion) {
-      const outSrc = await fetchVideo(zoomUrl(a, 'out'));
-      await prepare(zOut, outSrc);
-      zOut.currentTime = 0;
-      show(zOut, true); show(zIn, false); zIn.pause();
-      await zOut.play().catch(() => {});
-      await playEnd(zOut);
+    try {
+      await wait(reduceMotion ? 0 : 350);
+      if (me !== seq) return;
+      ovMedia.innerHTML = '';
+      if (!reduceMotion) {
+        const outSrc = await fetchVideo(zoomUrl(a, 'out'));
+        await prepare(zOut, outSrc);
+        if (me !== seq) return;
+        zOut.currentTime = 0;
+        show(zOut, true); show(zIn, false); zIn.pause();
+        await playSafe(zOut);
+        await playEnd(zOut);
+        if (me !== seq) return;
+      }
+      // zurück in die Übersicht: Loop über das Ende der Rückfahrt legen
+      draw(INTRO_END, true); current = target = INTRO_END;
+      loopV.currentTime = 0;
+      await playSafe(loopV);
+      await framePainted(loopV);
+      if (me !== seq) return;
+    } catch (e) {
+      if (me !== seq) return;
     }
-    // zurück in die Übersicht: Loop über das Ende der Rückfahrt legen
+    backToOverview();
+  }
+
+  // Übersicht wiederherstellen (Ende der Rückfahrt, auch als Notausgang)
+  function backToOverview() {
+    closeOverlay(); ovMedia.innerHTML = '';
     draw(INTRO_END, true); current = target = INTRO_END;
-    loopV.currentTime = 0;
-    await loopV.play().catch(() => {});
-    await framePainted(loopV);
+    if (loopV.paused) loopV.play().catch(() => {});
     loopV.style.transition = 'none'; show(loopV, true); void loopV.offsetWidth; loopV.style.transition = '';
-    show(zOut, false); show(zIn, false);
+    show(zOut, false); show(zIn, false); zIn.pause(); zOut.pause();
+    areas.forEach(x => x.btn.classList.remove('busy'));
     showHotspots(true);
     lockScroll(false);
-    state = 'overview';
+    setState('overview');
     if (lastFocus && lastFocus.focus) lastFocus.focus({ preventScroll: true });
   }
+
+  // Wächter: hängt eine Fahrt trotzdem länger als 12 s, zurück in die Übersicht
+  setInterval(() => {
+    if ((state === 'zoomIn' || state === 'zoomOut') && Date.now() - stateSince > 12000) { seq++; backToOverview(); }
+  }, 1000);
 
   btnClose.addEventListener('click', closeArea);
   overlay.addEventListener('click', e => { if (e.target === overlay) closeArea(); });
@@ -384,9 +421,10 @@
   function reset() {
     closeOverlay(); ovMedia.innerHTML = '';
     [zIn, zOut, loopV].forEach(v => { v.pause(); show(v, false); });
+    areas.forEach(x => x.btn.classList.remove('busy'));
     showHotspots(false);
     lockScroll(false);
-    state = 'intro'; active = -1;
+    seq++; setState('intro'); active = -1;
     current = target = 0; draw(0, true);
     window.scrollTo(0, 0);
   }
@@ -425,6 +463,7 @@
     frameCount: INTRO_END + 1,
     get framesLoaded() { return frames.filter(Boolean).length; },
     get state() { return state; },
+    get stateSince() { return stateSince; },
     url: { zoom: zoomUrl, loop: loopUrl, detail: detailUrl, poster: a => `${detailPoster(a)}.${ext === 'avif' ? 'avif' : 'jpg'}` },
   };
 })();
