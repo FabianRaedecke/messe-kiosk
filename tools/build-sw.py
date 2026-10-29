@@ -5,8 +5,8 @@ import glob, os, hashlib, json
 os.chdir(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
 files = ['./', 'index.html', 'manifest.webmanifest', 'css/explorer.css', 'css/kiosk.css', 'js/explorer.js', 'js/kiosk.js',
          'icon-180.png', 'icon-192.png', 'icon-512.png', 'assets/fonts/SuisseIntl-Regular-WebS.woff2', 'assets/fonts/SuisseIntl-Bold-WebS.woff2', 'assets/fonts/SuisseIntl-Medium-WebS.woff2',
-         'assets/intro/1920/f000.webp']
-files += sorted(glob.glob('assets/intro/1920/*.avif')) + sorted(glob.glob('assets/video/*.mp4'))
+         ]
+files += sorted(glob.glob('assets/intro/1920/*.avif')) + sorted(glob.glob('assets/intro/1920/*.jpg')) + sorted(glob.glob('assets/video/*.mp4'))
 files += sorted(glob.glob('assets/video/*.avif')) + sorted(glob.glob('assets/video/*.jpg'))
 h = hashlib.sha1()
 for f in files:

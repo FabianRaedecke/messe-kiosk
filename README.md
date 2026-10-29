@@ -4,7 +4,7 @@ Gleiche Funktion wie die Website-Version, zusätzlich:
 
 - **Reset nach Inaktivität:** Nach 120 Sekunden ohne Berührung blendet die Ansicht kurz aus und startet wieder am Anfang. Ein offenes Overlay wird dabei geschlossen.
 - **Offline-fähig:** Alle Dateien werden beim ersten Start in den Cache geladen. Danach läuft alles ohne Internet.
-- **Alles vorgeladen:** Beim Start lädt einmal alles (ca. 15 MB), danach gibt es keine Wartezeiten.
+- **Alles vorgeladen:** Beim Start lädt einmal alles (ca. 60 MB), danach gibt es keine Wartezeiten.
 - **Höchste Qualität:** Bilder und Videos in 1920 px.
 - **Kiosk-Verhalten:** Kein Zoomen, kein Kontextmenü, keine Textauswahl, Bildschirm bleibt an (soweit iPadOS es erlaubt).
 - **Selbstpflege:** Läuft die Seite länger als 6 Stunden, lädt sie beim nächsten Reset einmal neu (aus dem Cache). Das hält den Speicher sauber, wenn das iPad den ganzen Messetag läuft.
@@ -21,9 +21,9 @@ Den Ordner auf einen Webserver mit **HTTPS** laden, z. B. auf eine eigene Subdom
 
 1. Safari öffnen und die Adresse aufrufen.
 2. Teilen → **Zum Home-Bildschirm**.
-3. Die App **vom Home-Bildschirm** starten, mit Internet. Unten rechts erscheint nach kurzer Zeit **„Offline bereit“**.
+3. Die App **vom Home-Bildschirm** starten, mit Internet. Unten rechts erscheint nach kurzer Zeit **„Ready offline“**.
 
-Wichtig: Die App auf dem Home-Bildschirm hat ihren eigenen Speicher, getrennt von Safari. Deshalb muss sie selbst einmal mit Internet gestartet werden, bis „Offline bereit“ erscheint. Danach am besten einmal im Flugmodus testen.
+Wichtig: Die App auf dem Home-Bildschirm hat ihren eigenen Speicher, getrennt von Safari. Deshalb muss sie selbst einmal mit Internet gestartet werden, bis „Ready offline“ erscheint. Danach am besten einmal im Flugmodus testen.
 
 ### 3. iPad für den Messebetrieb einstellen
 
@@ -52,7 +52,7 @@ Hotspot-Positionen und Texte wie in der Website-Version über `data-x` / `data-y
 1. Dateien ändern oder ersetzen (Texte in `index.html`, Bilder und Videos in `assets/`).
 2. Im Ordner `python3 tools/build-sw.py` ausführen. Das schreibt eine neue `sw.js` mit neuer Versionsnummer.
 3. Alles hochladen.
-4. Auf dem iPad die App mit Internet öffnen, „Offline bereit“ abwarten, App einmal schließen und neu öffnen.
+4. Auf dem iPad die App mit Internet öffnen, „Ready offline“ abwarten, App einmal schließen und neu öffnen.
 
 ## Aufbau
 
@@ -63,7 +63,7 @@ manifest.webmanifest   App-Name, Icon, Vollbild
 icon-*.png             App-Icons
 css/, js/              explorer.css / explorer.js wie in der Website-Version,
                        dazu kiosk.css / kiosk.js mit dem Messe-Verhalten
-assets/intro/1920/     Intro-Frames (AVIF, WebP als Fallback)
-assets/video/          Videos 1920 px (MP4, WebM nur als Fallback), Detail-Standbilder
+assets/intro/1920/     Intro-Frames f000–f049 (JPG)
+assets/video/          Videos 1920 px (MP4), Detail-Standbilder (JPG)
 tools/                 build-sw.py + Vorlage
 ```

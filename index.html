@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="de" class="ex-kiosk">
+<html lang="en" class="ex-kiosk">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
@@ -10,7 +10,7 @@
 <meta name="theme-color" content="#e6e7e9">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
-<title>Maschinen-Explorer · Messe</title>
+<title>ASC9500 Explorer</title>
 
 <link rel="preload" as="font" type="font/woff2" href="assets/fonts/SuisseIntl-Regular-WebS.woff2" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="assets/fonts/SuisseIntl-Bold-WebS.woff2" crossorigin>
@@ -35,18 +35,21 @@
      data-intro-share   Anteil der Strecke für die Fahrt (Standard 0.8)
      data-portrait-zoom Bildbreite im Hochformat = Viewport × Faktor (Standard 1.6)
      data-idle-timeout  Sekunden ohne Eingabe bis zum Reset (Standard 120, nur mit kiosk.js)
-     data-intro-end     Sekunde im Intro-Video (assets/video/intro-1920.mp4), an der die Übersicht erreicht ist (Standard 2, nur mit kiosk.js)
+     data-intro-end     Sekunde im Intro-Video (assets/video/intro-1920.mp4), an der die Übersicht erreicht ist; größer als die Videolänge = bis zum Ende (Standard 2, nur mit kiosk.js)
+     data-intro-frames  Anzahl Intro-Einzelbilder in assets/intro/1920 (Standard 51)
+     data-frame-fallback Dateiendung der Einzelbilder ohne AVIF-Unterstützung (Standard webp)
+     data-avif          "false" = keine AVIF-Dateien laden, nur WebP/JPG (Standard true)
+     data-kicker        Wort vor der Nummer im Overlay, z. B. „Module 01“ (Standard Bereich)
      data-play-duration Dauer der Fahrt mit Einzelbildern, falls das Intro-Video nicht startet (Standard 4, nur mit kiosk.js)
      ================================================================= -->
-<section class="ex" data-explorer data-idle-timeout="120" data-intro-end="2" data-scroll-length="260vh" data-intro-share="1" data-frame-width="1920" data-video-width="1920" data-assets="assets/" aria-label="Interaktive Maschinenansicht">
+<section class="ex" data-explorer data-idle-timeout="120" data-intro-end="99" data-intro-frames="50" data-frame-fallback="jpg" data-avif="false" data-kicker="Module" data-scroll-length="260vh" data-intro-share="1" data-frame-width="1920" data-video-width="1920" data-assets="assets/" aria-label="Interactive machine view">
   <div class="ex-sticky">
     <canvas class="ex-bg" width="160" height="90" aria-hidden="true"></canvas>
 
     <div class="ex-stage">
       <!-- Frame 0 als normales Bild: sofort sichtbar, bevor das Script läuft -->
       <picture class="ex-poster">
-        <source type="image/avif" srcset="assets/intro/1920/f000.avif">
-        <img src="assets/intro/1920/f000.webp" alt="Maschine in der Außenansicht" width="1920" height="1080">
+        <img src="assets/intro/1920/f000.jpg" alt="ASC9500, exterior view" width="1920" height="1080">
       </picture>
       <canvas class="ex-canvas" aria-hidden="true"></canvas>
       <video class="ex-zoom-in"  muted playsinline preload="none" aria-hidden="true"></video>
@@ -56,41 +59,61 @@
     </div>
 
     <div class="ex-progress"></div>
-    <div class="ex-choose">Bereich auswählen</div>
-    <div class="ex-hint"><i></i>Nach oben wischen</div>
+    <div class="ex-choose">Select a module</div>
+    <div class="ex-hint"><i></i>Swipe up</div>
   </div>
 
-  <!-- Inhalte der Bereiche: kommen später aus dem CMS.
+  <!-- Inhalte der Bereiche (ASC9500 Process Modules, Stand 28.10.2026).
        data-zoom    Nummer des Zoom-Videos (zoom-01-in / zoom-01-out)
        data-detail  Nummer des Detail-Loops und Standbilds
        data-video   "false" = nur Standbild
        data-x/-y    Hotspot-Position in % des Bildes (mit ?edit per Drag ermitteln) -->
   <div class="ex-areas">
-    <article class="ex-area" data-area="c-stage" data-name="C-Stage" data-zoom="01" data-detail="01" data-x="34" data-y="38">
-      <h2>Überschrift C-Stage</h2>
-      <p>Platzhalter Fließtext. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante venenatis dapibus.</p>
-      <p>Donec ullamcorper nulla non metus auctor fringilla. Maecenas sed diam eget risus varius blandit sit amet non magna.</p>
+    <article class="ex-area" data-area="dry-flip" data-name="Dry-Flip Station and 172 UV Unit" data-zoom="01" data-detail="01" data-video="false" data-x="19.5" data-y="56.8">
+      <h2>Both sides cleaned without manual handling</h2>
+      <p>The integrated Dry-Flip Station turns the mask in a dry state within the automated sequence. Frontside and backside can be processed in one run without manual intervention. This reduces the risk of contamination and damage and supports a stable, repeatable process flow. The 172 UV Unit activates the surface from hydrophobic to hydrophilic, enabling efficient particle removal and breaking up organic residues for further processing.</p>
+      <p class="ex-benefits">Your benefits:</p>
+      <ul>
+        <li>Surface activation and preparation for efficient particle removal</li>
+        <li>Frontside and backside processing in one automated run</li>
+        <li>Lower handling risk for valuable masks</li>
+        <li>Stable and repeatable process flow</li>
+      </ul>
     </article>
-    <article class="ex-area" data-area="condenser" data-name="Condenser" data-zoom="02" data-detail="02" data-x="52" data-y="30">
-      <h2>Überschrift Condenser</h2>
-      <p>Platzhalter Fließtext. Cras mattis consectetur purus sit amet fermentum. Vestibulum id ligula porta felis euismod semper.</p>
-      <p>Nullam quis risus eget urna mollis ornare vel eu leo. Aenean lacinia bibendum nulla sed consectetur.</p>
+    <article class="ex-area" data-area="pre-cleaning" data-name="Pre-Cleaning Module" data-zoom="02" data-detail="02" data-x="30" data-y="32">
+      <h2>Flexible pre-cleaning for every mask type</h2>
+      <p>The Pre-Cleaning Module reliably removes organic contamination and particles. It combines proven sulfuric acid/hydrogen peroxide mixture (SPM) processing and the patented, acid-free in-situ UV (ISUV) process in one module. Full-jet dispense, beam and megasonic cleaning, and frontside and backside rinse let you adapt the process to each mask type.</p>
+      <p class="ex-benefits">Your benefits:</p>
+      <ul>
+        <li>Choice between proven SPM and acid-free in-situ UV processing</li>
+        <li>Reduced chemical consumption with the acid-free option</li>
+        <li>Compatibility with multiple process media for greater flexibility</li>
+      </ul>
     </article>
-    <article class="ex-area" data-area="dyson" data-name="Dyson" data-zoom="03" data-detail="03" data-x="62" data-y="55">
-      <h2>Überschrift Dyson</h2>
-      <p>Platzhalter Fließtext. Maecenas faucibus mollis interdum. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
-      <p>Etiam porta sem malesuada magna mollis euismod. Curabitur blandit tempus porttitor.</p>
+    <article class="ex-area" data-area="final-cleaning" data-name="Final Cleaning Module" data-zoom="03" data-detail="03" data-x="71.2" data-y="32">
+      <h2>Effective particle removal, gentle on fragile features</h2>
+      <p>The optional Final Cleaning Module balances high particle removal efficiency with the protection of fragile mask features such as sub-resolution assist features (SRAFs). Beam and megasonic cleaning combined with droplet spray let you select the right level of physical force for each application. Frontside and backside rinse prepares a clean mask on both sides for inspection.</p>
+      <p class="ex-benefits">Your benefits:</p>
+      <ul>
+        <li>Adjustable physical force for each layout and mask type</li>
+        <li>Clean frontside and backside before inspection</li>
+        <li>Compatibility with multiple process media</li>
+      </ul>
     </article>
-    <article class="ex-area" data-area="robot" data-name="Robot" data-zoom="04" data-detail="04" data-video="false" data-x="28" data-y="72">
-      <h2>Überschrift Robot</h2>
-      <p>Platzhalter Fließtext. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Sed posuere consectetur est at lobortis.</p>
-      <p>Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit.</p>
+    <article class="ex-area" data-area="hot-cool-plate" data-name="Hot and Cool Plate Module" data-zoom="04" data-detail="04" data-video="false" data-x="80.8" data-y="63.2">
+      <h2>Controlled thermal processing for effective haze control</h2>
+      <p>Residual ions such as sulfate and ammonium are a known root cause of haze on masks used in KrF (248&nbsp;nm) and ArF (193&nbsp;nm) lithography. In combination with a hot deionized (DI) water rinse, the hot plate provides a dedicated thermal step to reduce residual ions. The cool plate then brings the mask back to a controlled temperature for the next process step.</p>
+      <p class="ex-benefits">Your benefits:</p>
+      <ul>
+        <li>Support for effective residual ion removal and haze control</li>
+        <li>Controlled thermal conditions for a stable process flow</li>
+      </ul>
     </article>
   </div>
 
   <div class="ex-overlay" aria-hidden="true">
     <div class="ex-dialog" role="dialog" aria-modal="true" aria-labelledby="ex-ov-title">
-      <button class="ex-close" type="button" aria-label="Detailansicht schließen">
+      <button class="ex-close" type="button" aria-label="Close detail view">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
       </button>
       <div class="ex-media"></div>
@@ -102,7 +125,7 @@
   </div>
 </section>
 
-<div class="ex-loader"><span class="ex-loader-text">Lädt …</span></div>
+<div class="ex-loader"><span class="ex-loader-text">Loading …</span></div>
 <div class="ex-veil" aria-hidden="true"></div>
 <div class="offline-badge" aria-hidden="true"></div>
 
@@ -118,7 +141,7 @@
     navigator.serviceWorker.addEventListener('message', e => {
       if (e.data.type !== 'status') return;
       const ok = e.data.cached >= e.data.total;
-      badge.textContent = ok ? 'Offline bereit' : `Offline-Cache ${e.data.cached} / ${e.data.total}`;
+      badge.textContent = ok ? 'Ready offline' : `Offline cache ${e.data.cached} / ${e.data.total}`;
       badge.classList.toggle('ok', ok); badge.classList.add('on');
       if (ok) setTimeout(() => badge.classList.remove('on'), 4000); else setTimeout(ask, 2000);
     });

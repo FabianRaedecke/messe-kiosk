@@ -18,7 +18,7 @@
 
   /* ---------- Einstellungen (per data-Attribut am Wrapper überschreibbar) ---------- */
   const BASE          = root.dataset.assets || 'assets/';
-  const INTRO_END     = 50;                                   // letzter Intro-Frame = Übersicht
+  const INTRO_END     = parseInt(root.dataset.introFrames || '51', 10) - 1; // letzter Intro-Frame = Übersicht
   const FRAME_TIERS   = [960, 1440, 1920];
   const VIDEO_TIERS   = [960, 1600];
   const INTRO_SHARE   = parseFloat(root.dataset.introShare || '0.8');   // Anteil Scrollstrecke für die Fahrt
@@ -57,7 +57,9 @@
   const withTimeout = (p, ms) => Promise.race([p, wait(ms)]);
   const once = (el, ev) => new Promise(r => el.addEventListener(ev, r, { once: true }));
 
-  const avifSupport = new Promise(res => {
+  // data-avif="false": nur WebP/JPG laden (z. B. wenn ein Encoder AVIFs erzeugt, die Safari nicht dekodiert)
+  const useAvif = root.dataset.avif !== 'false';
+  const avifSupport = !useAvif ? Promise.resolve(false) : new Promise(res => {
     const i = new Image();
     i.onload = () => res(i.width > 0); i.onerror = () => res(false);
     i.src = 'data:image/avif;base64,AAAAIGZ0eXBhdmlmAAAAAGF2aWZtaWYxbWlhZk1BMUIAAADybWV0YQAAAAAAAAAoaGRscgAAAAAAAAAAcGljdAAAAAAAAAAAAAAAAGxpYmF2aWYAAAAADnBpdG0AAAAAAAEAAAAeaWxvYwAAAABEAAABAAEAAAABAAABGgAAAB0AAAAoaWluZgAAAAAAAQAAABppbmZlAgAAAAABAABhdjAxQ29sb3IAAAAAamlwcnAAAABLaXBjbwAAABRpc3BlAAAAAAAAAAIAAAACAAAAEHBpeGkAAAAAAwgICAAAAAxhdjFDgQ0MAAAAABNjb2xybmNseAACAAIAAYAAAAAXaXBtYQAAAAAAAAABAAEEAQKDBAAAACVtZGF0EgAKCBgANogQEAwgMg8f8D///8WfhwB8+ErK42A=';
@@ -180,7 +182,7 @@
     b.type = 'button'; b.className = 'ex-hotspot';
     b.style.left = a.x + '%'; b.style.top = a.y + '%';
     b.style.transitionDelay = (a.i * 70) + 'ms';
-    b.setAttribute('aria-label', `${a.name}: Details ansehen`);
+    b.setAttribute('aria-label', `${a.name}: view details`);
     b.innerHTML = `<span class="ring"></span><span class="dot"></span><span class="label"></span>`;
     b.querySelector('.label').textContent = a.name;
     b.addEventListener('click', () => { if (!(EDIT && dragMoved)) openArea(a.i); });
@@ -256,12 +258,12 @@
 
   /* ---------- Overlay ---------- */
   async function fillOverlay(a) {
-    ovKicker.textContent = `Bereich ${String(a.i + 1).padStart(2, '0')} · ${a.name}`;
+    ovKicker.textContent = `${root.dataset.kicker || 'Bereich'} ${String(a.i + 1).padStart(2, '0')} · ${a.name}`;
     ovBody.innerHTML = a.el.innerHTML;
     const heading = ovBody.querySelector('h2,h3'); if (heading) heading.id = 'ex-ov-title';
     ovMedia.innerHTML = '';
     const pic = document.createElement('picture');
-    pic.innerHTML = `<source type="image/avif" srcset="${detailPoster(a)}.avif"><img src="${detailPoster(a)}.jpg" alt="">`;
+    pic.innerHTML = (useAvif ? `<source type="image/avif" srcset="${detailPoster(a)}.avif">` : '') + `<img src="${detailPoster(a)}.jpg" alt="">`;
     ovMedia.appendChild(pic);
     if (a.hasVideo) {
       const v = document.createElement('video');
@@ -393,7 +395,7 @@
   const ready = (async function init() {
     layout();
     pickTiers();
-    ext = (await avifSupport) ? 'avif' : 'webp';
+    ext = (await avifSupport) ? 'avif' : (root.dataset.frameFallback || 'webp');
     window.addEventListener('resize', layout);
 
     if (posterImg) {

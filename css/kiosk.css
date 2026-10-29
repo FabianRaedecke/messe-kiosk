@@ -47,3 +47,8 @@ html.ex-kiosk .ex-hint,html.ex-kiosk .ex-choose{display:none}
 .ex-reset svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 .ex-reset:active{background:var(--ex-glow);color:#000}
 .ex-reset:focus-visible{outline:2px solid var(--ex-glow);outline-offset:4px}
+/* Vorteile-Liste im Overlay */
+.ex-copy .ex-benefits{font-weight:700;margin:22px 0 10px}
+.ex-copy ul{margin:0 0 14px;padding:0 0 0 1.2em;font-size:16px;line-height:1.5;color:var(--ex-ink)}
+.ex-copy li{margin:0 0 6px}
+.ex-copy li::marker{color:var(--ex-accent)}

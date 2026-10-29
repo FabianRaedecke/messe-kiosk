@@ -136,6 +136,7 @@
     if (me !== run) return;
     window.scrollTo(0, ex.root.offsetTop + ex.root.offsetHeight - innerHeight);
     await until(() => ex.state === 'overview' && loopV.classList.contains('on') && !loopV.paused, 3000);
+    await wait(350);                              // Einblenden des Loops abwarten (.ex-loop, 0.3 s)
     if (me !== run) return;
     introV.classList.remove('on');
     playing = false;
@@ -170,7 +171,7 @@
   /* ---------- Start ---------- */
   ex.ready.then(async () => {
     const loader = document.querySelector('.ex-loader'), loaderText = document.querySelector('.ex-loader-text');
-    await preloadAll(p => { if (loaderText) loaderText.textContent = `Lädt … ${Math.round(p * 100)} %`; });
+    await preloadAll(p => { if (loaderText) loaderText.textContent = `Loading … ${Math.round(p * 100)} %`; });
     if (loader) loader.classList.add('done');
     markActivity();
   });
