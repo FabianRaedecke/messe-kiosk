@@ -46,8 +46,6 @@ html.ex-kiosk .ex-hint,html.ex-kiosk .ex-choose{display:none}
   box-shadow:0 0 0 2px var(--ex-accent),0 10px 28px rgba(1,63,48,.4);transition:background .25s,color .25s,transform .35s var(--ex-ease)}
 .ex-play svg{width:40px;height:40px;margin-left:-2px;fill:currentColor}
 .ex-play .ring{position:absolute;inset:0;border-radius:50%;border:2px solid var(--ex-glow);animation:ex-pulse 2.2s var(--ex-ease) infinite}
-.ex-play .label{position:absolute;left:50%;top:calc(100% + 8px);transform:translateX(-50%);white-space:nowrap;
-  background:var(--ex-accent);color:#fff;font:500 15px/1 var(--ex-font);padding:10px 16px;border-radius:999px;box-shadow:0 4px 14px rgba(1,63,48,.3)}
 .ex-play:active .dot{transform:scale(.94);background:var(--ex-accent);color:var(--ex-glow)}
 .ex-play:focus-visible{outline:2px solid var(--ex-glow);outline-offset:4px}
 @media (prefers-reduced-motion:reduce){.ex-play .ring{animation:none}}
